@@ -1,0 +1,242 @@
+{
+ "task": "MarkorDeleteNote",
+ "goal": "Delete the note in Markor named copy_jolly_island.",
+ "params": {
+  "file_name": "copy_jolly_island",
+  "noise_candidates": "['grocery_list_weekly.md', 'meeting_notes_project_team.md', 'personal_goals_2024.md', 'reading_list_2024.md', 'research_paper_summary.md', 'summer_vacation_plans.md', 'budget_home_renovation.md', 'april_workout_routine.md', 'birthday_gift_ideas_mom.md', 'recipe_homemade_pizza.md', 'weekend_todo_list.md', 'insurance_plan_comparison.md', 'art_project_sketches.md', 'python_learning_goals.md', 'trip_reflections_recent.md', 'startup_ideas_launch.md', 'client_meetings_schedule.md', 'favorite_book_quotes.md', 'garden_layout_plan.md', 'upcoming_presentation_outline.md']"
+ },
+ "elements": [
+  {
+   "resource_name": "net.gsantner.markor:id/main__view_pager_container",
+   "content_description": null,
+   "text": null,
+   "class_name": "androidx.viewpager.widget.ViewPager",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/fab_add_new_item",
+   "content_description": "Create a new file or folder",
+   "text": null,
+   "class_name": "android.widget.ImageButton",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": null,
+   "content_description": null,
+   "text": "Markor",
+   "class_name": "android.widget.TextView",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/action_go_to",
+   "content_description": "Go to",
+   "text": null,
+   "class_name": "android.widget.TextView",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/action_sort",
+   "content_description": "Sort by",
+   "text": null,
+   "class_name": "android.widget.TextView",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/action_search",
+   "content_description": "Search",
+   "text": null,
+   "class_name": "android.widget.TextView",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": null,
+   "content_description": "More options",
+   "text": null,
+   "class_name": "android.widget.ImageView",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/nav_notebook",
+   "content_description": "Files",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/nav_todo",
+   "content_description": "To-Do",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/nav_quicknote",
+   "content_description": "QuickNote",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/nav_more",
+   "content_description": "More",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/ui__filesystem_dialog__list",
+   "content_description": null,
+   "text": null,
+   "class_name": "androidx.recyclerview.widget.RecyclerView",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "Folder .. ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File 2023_08_28_birthday_gift_ideas_mom.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File art_project_sketches_EEIu.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File art_project_sketches_Fpks.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File backup_recipe_homemade_pizza.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File copy_jolly_island ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File edited_insurance_plan_comparison.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File edited_python_learning_goals.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File final_python_learning_goals.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File grocery_list_weekly_2023_02_24.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File meeting_notes_project_team_copy.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File python_learning_goals_qwVV.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+   "content_description": "File uAaF_art_project_sketches.md ",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": true,
+   "is_editable": false
+  },
+  {
+   "resource_name": "com.android.systemui:id/clock",
+   "content_description": "21:04",
+   "text": "15:34",
+   "class_name": "android.widget.TextView",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "com.android.systemui:id/wifi_combo",
+   "content_description": "Wifi signal full.,No internet",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "com.android.systemui:id/mobile_combo",
+   "content_description": "Phone three bars.",
+   "text": null,
+   "class_name": "android.widget.FrameLayout",
+   "is_clickable": false,
+   "is_editable": false
+  },
+  {
+   "resource_name": "com.android.systemui:id/battery",
+   "content_description": "Battery 100 percent.",
+   "text": null,
+   "class_name": "android.widget.LinearLayout",
+   "is_clickable": false,
+   "is_editable": false
+  }
+ ]
+}
