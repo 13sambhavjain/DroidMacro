@@ -104,3 +104,35 @@ def test_input_text_ignores_text_field():
   r_input = verify(fp, els, 'input_text')
   assert not r_click.ok
   assert r_input.ok or r_input.n_candidates != 1
+
+
+# ---- slot discovery: phantom-slot regression (found 2026-08-23) ----------------
+# Naive substring matching over task params creates FALSE slots. Measured values in
+# the subset include on_or_off='on', month='10', hour='18', duration_mins='15'.
+
+def test_short_params_are_rejected_as_slots():
+  fp = Fingerprint(resource_name='r', class_name='c', content_description='Contacts')
+  # 'on' IS inside 'Contacts', and IS in the goal -- only the length floor and the
+  # word-boundary rule stop it becoming a slot.
+  assert fp.with_slots({'on_or_off': 'on'}, goal='Turn wifi on.').slots == ()
+
+
+def test_word_boundary_blocks_embedded_matches():
+  fp = Fingerprint(resource_name='r', class_name='c', content_description='Notifications')
+  assert fp.with_slots({'mode': 'ication'}, goal='set ication').slots == ()
+
+
+def test_value_absent_from_goal_is_not_a_slot():
+  """If the user never said it, the matcher cannot extract it at replay."""
+  fp = Fingerprint(resource_name='r', class_name='c', content_description='File report_2024')
+  assert fp.with_slots({'file_name': 'report_2024'}, goal='Delete something').slots == ()
+  got = fp.with_slots({'file_name': 'report_2024'}, goal='Delete report_2024 please').slots
+  assert got and got[0][1][0][0] == 'file_name'
+
+
+def test_longest_match_wins_over_contained_param():
+  fp = Fingerprint(resource_name='r', class_name='c', content_description='File trip_notes_2024')
+  goal = 'Delete trip_notes_2024 which is in trip_notes'
+  got = fp.with_slots({'short': 'trip_notes', 'long': 'trip_notes_2024'}, goal=goal).slots
+  flat = [kv for _, hits in got for kv in hits]
+  assert flat == [('long', 'trip_notes_2024')], flat

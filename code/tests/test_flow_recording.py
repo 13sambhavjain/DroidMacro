@@ -20,7 +20,8 @@ def notes(els):
 def build_episode(target, params):
   ep = EpisodeRecord(episode_id('MarkorDeleteNote', 1, 'baseline', None),
                      'MarkorDeleteNote', 1, 'baseline', None,
-                     goal='Delete the note', provider='fake', model='fake-0')
+                     goal=f'Delete the note in Markor named {params["file_name"]}.',
+                     provider='fake', model='fake-0')
   ep.steps = [
       dataclasses.asdict(StepRecord(0, {'action_type': 'open_app', 'app_name': 'Markor'})),
       dataclasses.asdict(StepRecord(1, {'action_type': 'long_press', 'index': 3},

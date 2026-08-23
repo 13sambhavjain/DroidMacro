@@ -44,7 +44,8 @@ def save_flow(flow_dir: pathlib.Path, task: str, seed: int, ep: EpisodeRecord,
   steps = []
   for s in ep.steps:
     fp_d = s.get('target')
-    fp = Fingerprint.from_dict(fp_d).with_slots(params) if fp_d else None
+    fp = (Fingerprint.from_dict(fp_d).with_slots(params, goal=ep.goal)
+           if fp_d else None)
     steps.append({'action': s['action'],
                   'target': fp.to_dict() if fp else None,
                   'source_step': s['i']})

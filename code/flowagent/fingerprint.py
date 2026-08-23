@@ -23,6 +23,7 @@ Measured facts that forced the design (2026-08-22, 111 elements / 5 screens):
 from __future__ import annotations
 
 import dataclasses
+import re
 from typing import Any, Optional
 
 # Actions that carry no target element: the pre-check passes vacuously.
@@ -37,6 +38,17 @@ TEXT_EXEMPT_ACTIONS = frozenset({'input_text'})
 
 PARAMETERIZABLE_FIELDS = ('text', 'content_description')
 
+# Params shorter than this are rejected as slot candidates: measured values in the
+# subset include '10', '18', '15', 'on', 'max' -- all of which match unrelated screen
+# text. See Fingerprint.with_slots.
+MIN_SLOT_LEN = 4
+
+
+def _word_in(needle: str, hay: str) -> bool:
+  """Whole-token containment. Plain `in` would match 'on' inside 'Contacts'."""
+  return re.search(rf'(?<![A-Za-z0-9_]){re.escape(needle)}(?![A-Za-z0-9_])',
+                   hay) is not None
+
 
 @dataclasses.dataclass(frozen=True)
 class Fingerprint:
@@ -47,8 +59,11 @@ class Fingerprint:
   class_name: Optional[str] = None
   is_clickable: Optional[bool] = None
   is_editable: Optional[bool] = None
-  # field name -> {param_name: literal value seen at record time}
+  # field name -> ((param_name, literal value seen at record time), ...)
   slots: tuple[tuple[str, tuple[tuple[str, str], ...]], ...] = ()
+  # False until a human reviews the auto-discovered candidates (framing B's
+  # approval step). Recorded so the write-up can state exactly what was human-checked.
+  slots_confirmed: bool = False
 
   @classmethod
   def from_element(cls, e: Any) -> 'Fingerprint':
@@ -72,23 +87,52 @@ class Fingerprint:
     return cls(**{**d, 'slots': slots})
 
   # ---- parameterization (SCOPE_DECISION §2) --------------------------------
-  def with_slots(self, params: dict[str, Any]) -> 'Fingerprint':
-    """Discover parameter slots by exact substring match against recorded params.
+  def with_slots(self, params: dict[str, Any], goal: Optional[str] = None,
+                 min_len: int = MIN_SLOT_LEN) -> 'Fingerprint':
+    """Discover CANDIDATE parameter slots in this fingerprint.
 
-    Simulates the human pointing at "XYZ" and saying *that's the variable*.
-    DISCLOSED DEVIATION: framing B has a person mark the slots; we derive them from
-    the recording's own params. Slot VALUES at replay come only from the matcher
-    LLM reading the new instruction -- never from the task template (§2).
+    Naive substring matching over every param is unsafe. Measured on the real
+    subset, params include on_or_off='on', month='10', hour='18', duration='15'.
+    Plain `'on' in text` fires inside "Contacts", "Notifications", "Button"; '15'
+    fires on a clock reading 15:34. Those become phantom slots that corrupt the
+    fingerprint at replay.
+
+    Four rules, all required:
+      1. WORD-BOUNDARY match, not raw substring   -> kills 'on' inside 'Contacts'
+      2. value must also appear in the GOAL       -> if the user never said it, the
+         matcher LLM cannot extract it at replay, so it cannot be a slot
+      3. length floor                             -> short numerics are ambiguous
+      4. longest match wins                       -> a param contained in a longer
+         param is dropped rather than double-substituted
+
+    These yield CANDIDATES. Framing B has a human confirm them (and pin some as
+    fixed); `slots_confirmed` records whether that review happened.
     """
     found = []
     for field in PARAMETERIZABLE_FIELDS:
       val = getattr(self, field)
       if not val:
         continue
-      hits = tuple((k, str(v)) for k, v in params.items()
-                   if isinstance(v, (str, int, float)) and str(v) and str(v) in val)
-      if hits:
-        found.append((field, hits))
+      hits = []
+      for k, v in params.items():
+        if not isinstance(v, (str, int, float)):
+          continue
+        sv = str(v)
+        if len(sv) < min_len:
+          continue                                   # rule 3
+        if goal is not None and not _word_in(sv, goal):
+          continue                                   # rule 2
+        if not _word_in(sv, val):
+          continue                                   # rule 1
+        hits.append((k, sv))
+      hits.sort(key=lambda kv: -len(kv[1]))           # rule 4
+      kept: list[tuple[str, str]] = []
+      for k, sv in hits:
+        if any(sv in prev for _, prev in kept):
+          continue
+        kept.append((k, sv))
+      if kept:
+        found.append((field, tuple(kept)))
     return dataclasses.replace(self, slots=tuple(found))
 
   def substitute(self, values: dict[str, str]) -> 'Fingerprint':
