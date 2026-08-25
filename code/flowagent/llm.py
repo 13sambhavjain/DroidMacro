@@ -15,6 +15,7 @@ from __future__ import annotations
 import dataclasses
 import json
 import os
+import pathlib
 import time
 import urllib.error
 import urllib.request
@@ -27,6 +28,28 @@ _MAX_BACKOFF = 30.0
 
 class RateLimited(RuntimeError):
   """Provider quota exhausted. Runner should checkpoint and stop."""
+
+
+def load_env(path: Optional[str] = None) -> list[str]:
+  """Load the git-ignored .env, two levels above this file, into os.environ. Returns the names loaded (never values).
+
+  Real shell exports win: an already-set variable is not overwritten, so a
+  deliberate `export GROQ_API_KEY=...` still takes precedence over the file.
+  """
+  f = pathlib.Path(path) if path else pathlib.Path(__file__).resolve().parents[2] / '.env'
+  if not f.is_file():
+    return []
+  loaded = []
+  for line in f.read_text().splitlines():
+    line = line.strip()
+    if not line or line.startswith('#') or '=' not in line:
+      continue
+    k, v = line.split('=', 1)
+    k, v = k.strip(), v.strip().strip('"').strip("'")
+    if v and not os.environ.get(k):
+      os.environ[k] = v
+      loaded.append(k)
+  return loaded
 
 
 @dataclasses.dataclass
@@ -144,6 +167,7 @@ class FakeClient:
 
 
 def make_client(provider: str, model: Optional[str] = None, **kw):
+  load_env()
   if provider == 'groq':
     return GroqClient(model or 'openai/gpt-oss-20b', **kw)
   if provider == 'azure':
