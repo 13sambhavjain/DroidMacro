@@ -39,14 +39,21 @@ def load_env(path: Optional[str] = None) -> list[str]:
   f = pathlib.Path(path) if path else pathlib.Path(__file__).resolve().parents[2] / '.env'
   if not f.is_file():
     return []
-  loaded = []
+  # Collect first so a LATER line overrides an earlier one -- standard .env
+  # behaviour, and the case that matters: a rotated key appended below the dead
+  # one. Taking the first match silently sends the revoked credential.
+  values: dict[str, str] = {}
   for line in f.read_text().splitlines():
     line = line.strip()
     if not line or line.startswith('#') or '=' not in line:
       continue
     k, v = line.split('=', 1)
     k, v = k.strip(), v.strip().strip('"').strip("'")
-    if v and not os.environ.get(k):
+    if v:
+      values[k] = v
+  loaded = []
+  for k, v in values.items():
+    if not os.environ.get(k):      # a real shell export still wins
       os.environ[k] = v
       loaded.append(k)
   return loaded

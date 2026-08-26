@@ -19,7 +19,18 @@ from typing import Any, Optional
 from android_world.env import json_action
 
 from flowagent.fingerprint import NO_TARGET_ACTIONS, Fingerprint
-from flowagent.trace import StepRecord
+from flowagent.trace import StepRecord, tree_hash
+
+# Actions that plausibly change the screen. On this host a warm app launch takes
+# ~5.6s (measured) while get_state() returns in ~0.6-1.8s, so without a settle
+# wait the agent observes the OLD screen, concludes nothing happened, and repeats
+# the action. That is exactly the loop seen in the first live episode.
+SCREEN_CHANGING_ACTIONS = frozenset({
+    'click', 'double_tap', 'long_press', 'open_app', 'navigate_back',
+    'navigate_home', 'keyboard_enter', 'scroll', 'swipe', 'input_text',
+})
+SETTLE_TIMEOUT_S = 6.0
+SETTLE_POLL_S = 0.6
 
 SYSTEM = """You are an agent operating an Android phone to complete a task.
 At each step you see the screen as a numbered list of UI elements. Choose ONE action.
@@ -41,6 +52,9 @@ Rules:
 - Reply with ONE JSON object and nothing else: {"reason":"<short>","action":{...}}
 - `index` must be an index from the element list on THIS screen.
 - Emit status/complete as soon as the goal is satisfied. Do not keep going.
+- Prefer {"action_type":"open_app","app_name":"..."} over hunting for an icon.
+- If a previous action is marked NO VISIBLE CHANGE, do NOT repeat it. Try a
+  different element, a different action type, or navigate_back.
 """
 
 
@@ -113,15 +127,34 @@ class BaselineAgent:
   def __init__(self, env, client, max_history: int = 8):
     self.env, self.client, self.max_history = env, client, max_history
     self.history: list[str] = []
+    self.last_hash: Optional[str] = None
 
   def reset(self) -> None:
     self.history = []
+    self.last_hash = None
+
+  def _settle(self) -> tuple[list, str, float]:
+    """Observe, waiting briefly for the screen to actually change.
+
+    Returns (elements, hash, seconds). Gives up after SETTLE_TIMEOUT_S and lets
+    the caller report NO VISIBLE CHANGE rather than blocking forever.
+    """
+    t0 = time.perf_counter()
+    while True:
+      state = self.env.get_state(wait_to_stabilize=True)
+      h = tree_hash(state.ui_elements)
+      if self.last_hash is None or h != self.last_hash:
+        return state.ui_elements, h, time.perf_counter() - t0
+      if time.perf_counter() - t0 >= SETTLE_TIMEOUT_S:
+        return state.ui_elements, h, time.perf_counter() - t0
+      time.sleep(SETTLE_POLL_S)
 
   def step(self, goal: str, i: int) -> StepOutcome:
-    t0 = time.perf_counter()
-    state = self.env.get_state(wait_to_stabilize=True)
-    obs_dt = time.perf_counter() - t0
-    elements = state.ui_elements
+    elements, cur_hash, obs_dt = self._settle()
+    unchanged = self.last_hash is not None and cur_hash == self.last_hash
+    if unchanged and self.history:
+      self.history[-1] += '  <- NO VISIBLE CHANGE'
+    self.last_hash = cur_hash
     rendered = render_elements(elements)
 
     hist = ('\n'.join(f'{n+1}. {h}' for n, h in
@@ -133,6 +166,8 @@ class BaselineAgent:
 
     rec = StepRecord(i=i, action={}, source='llm', obs_latency_s=obs_dt,
                      n_elements=len(elements), tree_chars=len(rendered))
+    if unchanged:
+      rec.error = 'previous action produced no visible change'
 
     resp = self.client.complete(SYSTEM, user)
     rec.llm_prompt_tokens = resp.prompt_tokens

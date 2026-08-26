@@ -150,6 +150,10 @@ def main() -> None:
   env = env_launcher.load_and_setup_env(console_port=args.console_port,
                                         emulator_setup=False, adb_path=ADB)
   n_ok = 0
+  rate_limited = False
+  consecutive_env_errors = 0
+  env_broken = False
+  n_errors = 0
   try:
     for k, (t, s) in enumerate(todo, 1):
       print(f'[{k}/{len(todo)}] {t} seed={s}')
@@ -158,10 +162,26 @@ def main() -> None:
       except RateLimited as exc:
         print(f'  !! rate limited: {exc}\n  checkpointed; rerun the same command '
               f'to resume from here.')
+        rate_limited = True
         break
       except Exception as exc:                      # noqa: BLE001
         print(f'  !! {type(exc).__name__}: {exc}')
+        n_errors += 1
+        # A dead accessibility service fails every subsequent episode instantly.
+        # Observed 2026-08-26: one TimeoutError, then 10 straight 'Could not get
+        # a11y tree' -- 11 episodes silently skipped while the runner still
+        # exited 0 and the wrapper declared the pass COMPLETE. Bail out and let
+        # the wrapper restart the emulator instead of burning the rest of the list.
+        if 'a11y' in str(exc) or isinstance(exc, TimeoutError):
+          consecutive_env_errors += 1
+          if consecutive_env_errors >= 3:
+            print(f'  !! {consecutive_env_errors} consecutive environment failures'
+                  f' -- the accessibility service looks dead. Stopping so the'
+                  f' emulator can be restarted; progress is checkpointed.')
+            env_broken = True
+            break
         continue
+      consecutive_env_errors = 0
       tot = ep.totals()
       n_ok += bool(ep.success)
       print(f'    success={ep.success} steps={tot["steps"]} llm_calls={tot["llm_calls"]} '
@@ -169,7 +189,22 @@ def main() -> None:
             f'{ep.wall_s:.0f}s ({ep.done_reason})')
   finally:
     env.close()
+  remaining = len(todo) - len(writer.completed_ids() & {episode_id(t, s_, 'baseline', None)
+                                                        for t, s_ in todo})
   print(f'\n{n_ok}/{len(todo)} succeeded -> flows in {flow_dir}')
+  if n_errors:
+    print(f'{n_errors} episode(s) errored and were skipped; {remaining} still unrun')
+
+  # Exit codes the wrapper acts on:
+  #   75 rate limited      -> sleep, then resume
+  #   76 environment broke -> restart the emulator, then resume immediately
+  #    0 genuinely done    -> only when nothing is left unrun
+  if env_broken:
+    raise SystemExit(76)
+  if rate_limited:
+    raise SystemExit(75)
+  if remaining:
+    raise SystemExit(76)
 
 
 if __name__ == '__main__':
