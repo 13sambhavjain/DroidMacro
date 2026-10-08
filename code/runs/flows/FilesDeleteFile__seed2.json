@@ -1,0 +1,194 @@
+{
+ "task": "FilesDeleteFile",
+ "seed": 2,
+ "goal": "Delete the file TPtL_clever_fish.mp3 from the Android filesystem located in the Alarms folder within the sdk_gphone_x86_64 storage area.",
+ "params": {
+  "file_name": "TPtL_clever_fish.mp3",
+  "subfolder": "Alarms",
+  "noise_candidates": [
+   "morning_alarm.mp3",
+   "wake_up.mp3",
+   "early_alarm.mp3",
+   "daily_reminder.mp3",
+   "weekend_alarm.mp3",
+   "night_alarm.mp3",
+   "early_bird.mp3",
+   "fitness_reminder.mp3",
+   "meditation_time.mp3"
+  ]
+ },
+ "recorded_start_tree_hash": "ddc1c5c912e59fe3",
+ "provider": "groq",
+ "model": "openai/gpt-oss-20b",
+ "n_steps": 12,
+ "steps": [
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Files"
+   },
+   "target": null,
+   "source_step": 0
+  },
+  {
+   "action": {
+    "action_type": "navigate_back"
+   },
+   "target": null,
+   "source_step": 1
+  },
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Files"
+   },
+   "target": null,
+   "source_step": 2
+  },
+  {
+   "action": {
+    "action_type": "navigate_back"
+   },
+   "target": null,
+   "source_step": 3
+  },
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Files"
+   },
+   "target": null,
+   "source_step": 4
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 1
+   },
+   "target": {
+    "resource_name": null,
+    "content_description": "Show roots",
+    "text": null,
+    "class_name": "android.widget.ImageButton",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 5
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 8
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "sdk_gphone64_arm64",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 6
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 14
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "Alarms",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [
+     [
+      "text",
+      [
+       [
+        "subfolder",
+        "Alarms"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 7
+  },
+  {
+   "action": {
+    "action_type": "long_press",
+    "index": 17
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "TPtL_clever_fish.mp3",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [
+     [
+      "text",
+      [
+       [
+        "file_name",
+        "TPtL_clever_fish.mp3"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 8
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 3
+   },
+   "target": {
+    "resource_name": "com.google.android.documentsui:id/action_menu_delete",
+    "content_description": "Delete",
+    "text": null,
+    "class_name": "android.widget.TextView",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 9
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 2
+   },
+   "target": {
+    "resource_name": "android:id/button1",
+    "content_description": null,
+    "text": "OK",
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 10
+  },
+  {
+   "action": {
+    "action_type": "status",
+    "goal_status": "complete"
+   },
+   "target": null,
+   "source_step": 11
+  }
+ ]
+}

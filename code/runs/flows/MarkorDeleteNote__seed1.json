@@ -1,0 +1,138 @@
+{
+ "task": "MarkorDeleteNote",
+ "seed": 1,
+ "goal": "Delete the note in Markor named friendly_koala_2023_03_02.",
+ "params": {
+  "file_name": "friendly_koala_2023_03_02",
+  "noise_candidates": [
+   "grocery_list_weekly.md",
+   "meeting_notes_project_team.md",
+   "personal_goals_2024.md",
+   "reading_list_2024.md",
+   "research_paper_summary.md",
+   "summer_vacation_plans.md",
+   "budget_home_renovation.md",
+   "april_workout_routine.md",
+   "birthday_gift_ideas_mom.md",
+   "recipe_homemade_pizza.md",
+   "weekend_todo_list.md",
+   "insurance_plan_comparison.md",
+   "art_project_sketches.md",
+   "python_learning_goals.md",
+   "trip_reflections_recent.md",
+   "startup_ideas_launch.md",
+   "client_meetings_schedule.md",
+   "favorite_book_quotes.md",
+   "garden_layout_plan.md",
+   "upcoming_presentation_outline.md"
+  ]
+ },
+ "recorded_start_tree_hash": "ddc1c5c912e59fe3",
+ "provider": "groq",
+ "model": "openai/gpt-oss-20b",
+ "n_steps": 7,
+ "steps": [
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Markor"
+   },
+   "target": null,
+   "source_step": 0
+  },
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Markor"
+   },
+   "target": null,
+   "source_step": 1
+  },
+  {
+   "action": {
+    "action_type": "long_press",
+    "index": 14
+   },
+   "target": {
+    "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+    "content_description": "File friendly_koala_2023_03_02 ",
+    "text": null,
+    "class_name": "android.widget.LinearLayout",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [
+     [
+      "content_description",
+      [
+       [
+        "file_name",
+        "friendly_koala_2023_03_02"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 2
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 5
+   },
+   "target": {
+    "resource_name": "net.gsantner.markor:id/action_delete_selected_items",
+    "content_description": "Delete",
+    "text": null,
+    "class_name": "android.widget.TextView",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 3
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 3
+   },
+   "target": {
+    "resource_name": "android:id/button1",
+    "content_description": null,
+    "text": "OK",
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 4
+  },
+  {
+   "action": {
+    "action_type": "long_press",
+    "index": 12
+   },
+   "target": {
+    "resource_name": "net.gsantner.markor:id/opoc_filesystem_item__root",
+    "content_description": "File copy_friendly_koala_2023_03_02.md ",
+    "text": null,
+    "class_name": "android.widget.LinearLayout",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 5
+  },
+  {
+   "action": {
+    "action_type": "status",
+    "goal_status": "infeasible"
+   },
+   "target": null,
+   "source_step": 6
+  }
+ ]
+}

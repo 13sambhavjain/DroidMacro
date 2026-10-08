@@ -1,0 +1,166 @@
+{
+ "task": "SystemWifiTurnOn",
+ "seed": 1,
+ "goal": "Turn wifi on.",
+ "params": {
+  "on_or_off": "on"
+ },
+ "recorded_start_tree_hash": "03d3844ded935923",
+ "provider": "groq",
+ "model": "openai/gpt-oss-20b",
+ "n_steps": 10,
+ "steps": [
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Settings"
+   },
+   "target": null,
+   "source_step": 0
+  },
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Settings"
+   },
+   "target": null,
+   "source_step": 1
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 5
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "Network & internet",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 2
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 4
+   },
+   "target": {
+    "resource_name": "android:id/summary",
+    "content_description": null,
+    "text": "Networks available",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 3
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 9
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 4
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 10
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 5
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 9
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 6
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 11
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 7
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 11
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 8
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 9
+   },
+   "target": {
+    "resource_name": "android:id/switch_widget",
+    "content_description": null,
+    "text": null,
+    "class_name": "android.widget.Switch",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 9
+  }
+ ]
+}

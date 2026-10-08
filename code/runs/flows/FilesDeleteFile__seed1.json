@@ -1,0 +1,164 @@
+{
+ "task": "FilesDeleteFile",
+ "seed": 1,
+ "goal": "Delete the file fancy_wolf_2023_03_02.jpg from the Android filesystem located in the DCIM folder within the sdk_gphone_x86_64 storage area.",
+ "params": {
+  "file_name": "fancy_wolf_2023_03_02.jpg",
+  "subfolder": "DCIM",
+  "noise_candidates": [
+   "holiday_photos.jpg",
+   "birthday_party.jpg",
+   "wedding_event.jpg",
+   "nature_pics.jpg",
+   "road_trip.jpg",
+   "graduation_ceremony.jpg",
+   "first_day_school.jpg",
+   "mountain_hike.jpg",
+   "winter_holiday.jpg"
+  ]
+ },
+ "recorded_start_tree_hash": "ddc1c5c912e59fe3",
+ "provider": "groq",
+ "model": "openai/gpt-oss-20b",
+ "n_steps": 8,
+ "steps": [
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Files"
+   },
+   "target": null,
+   "source_step": 0
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 1
+   },
+   "target": {
+    "resource_name": null,
+    "content_description": "Show roots",
+    "text": null,
+    "class_name": "android.widget.ImageButton",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 1
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 8
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "sdk_gphone64_arm64",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 2
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 17
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "DCIM",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [
+     [
+      "text",
+      [
+       [
+        "subfolder",
+        "DCIM"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 3
+  },
+  {
+   "action": {
+    "action_type": "long_press",
+    "index": 21
+   },
+   "target": {
+    "resource_name": "android:id/title",
+    "content_description": null,
+    "text": "fancy_wolf_2023_03_02.jpg",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [
+     [
+      "text",
+      [
+       [
+        "file_name",
+        "fancy_wolf_2023_03_02.jpg"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 4
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 3
+   },
+   "target": {
+    "resource_name": "com.google.android.documentsui:id/action_menu_delete",
+    "content_description": "Delete",
+    "text": null,
+    "class_name": "android.widget.TextView",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 5
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 2
+   },
+   "target": {
+    "resource_name": "android:id/button1",
+    "content_description": null,
+    "text": "OK",
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 6
+  },
+  {
+   "action": {
+    "action_type": "status",
+    "goal_status": "complete"
+   },
+   "target": null,
+   "source_step": 7
+  }
+ ]
+}

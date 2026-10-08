@@ -1,0 +1,196 @@
+{
+ "task": "SimpleCalendarDeleteOneEvent",
+ "seed": 1,
+ "goal": "In Simple Calendar Pro, delete the calendar event on 2023-10-19 at 18h with the title 'Workshop on Project X'",
+ "params": {
+  "year": 2023,
+  "month": 10,
+  "day": 19,
+  "hour": 18,
+  "duration_mins": 15,
+  "event_title": "Workshop on Project X",
+  "event_description": "We will understand software updates. Looking forward to productive discussions.",
+  "row_objects": [
+   "CalendarEvent(start_ts=1697738400, end_ts=1697739300, title='Workshop on Project X', location='', description='We will understand software updates. Looking forward to productive discussions.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)"
+  ],
+  "noise_row_objects": [
+   "CalendarEvent(start_ts=1698300000, end_ts=1698300900, title='Appointment for Project X', location='', description='We will explore contract details.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698069600, end_ts=1698072300, title='Review session for Annual Report', location='', description='We will strategize about marketing strategies. Please bring relevant documents.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1696118400, end_ts=1696119300, title='Appointment for Annual Report', location='', description='We will explore upcoming project milestones.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698242400, end_ts=1698246000, title='Catch up on Annual Report', location='', description='We will review product launch.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698242400, end_ts=1698245100, title='Meeting with HR', location='', description='We will organize marketing strategies.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697929200, end_ts=1697931900, title='Meeting with Marketing', location='', description='We will review business objectives. Snacks will be provided.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698440400, end_ts=1698442200, title='Workshop on Budget Planning', location='', description='We will strategize about software updates. Snacks will be provided.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698454800, end_ts=1698458400, title='Call with Marketing', location='', description='We will explore contract details.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697130000, end_ts=1697132700, title='Meeting with HR', location='', description='We will organize marketing strategies.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697544000, end_ts=1697546700, title='Appointment for Project X', location='', description='We will understand upcoming project milestones. Snacks will be provided.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1696140000, end_ts=1696141800, title='Appointment for Budget Planning', location='', description=\"We will strategize about client feedback. Let's be punctual.\", repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697994000, end_ts=1697994900, title='Appointment for Annual Report', location='', description='We will organize business objectives.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697245200, end_ts=1697248800, title='Workshop on Annual Report', location='', description=\"We will organize contract details. Let's be punctual.\", repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697281200, end_ts=1697282100, title='Catch up on Budget Planning', location='', description='We will understand upcoming project milestones.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697864400, end_ts=1697866200, title='Meeting with Dr. Smith', location='', description='We will prepare for upcoming project milestones.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1696291200, end_ts=1696294800, title='Meeting with the Team', location='', description='We will celebrate team roles.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1698346800, end_ts=1698348600, title='Workshop on Budget Planning', location='', description='We will finalize annual budget.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1696867200, end_ts=1696869000, title='Review session for Budget Planning', location='', description='We will prepare for software updates. Looking forward to productive discussions.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1697425200, end_ts=1697426100, title='Workshop on Campaign', location='', description='We will review contract details.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)",
+   "CalendarEvent(start_ts=1696820400, end_ts=1696823100, title='Review session for Annual Report', location='', description='We will strategize about contract details.', repeat_interval=0, repeat_rule=0, reminder_1_minutes=-1, reminder_2_minutes=-1, reminder_3_minutes=-1, reminder_1_type=0, reminder_2_type=0, reminder_3_type=0, repeat_limit=0, repetition_exceptions='[]', attendees='', import_id='', time_zone='UTC', flags=0, event_type=1, parent_id=0, last_updated=0, source='imported-ics', availability=0, color=0, type=0, id=-1)"
+  ]
+ },
+ "recorded_start_tree_hash": "ddc1c5c912e59fe3",
+ "provider": "groq",
+ "model": "openai/gpt-oss-20b",
+ "n_steps": 12,
+ "steps": [
+  {
+   "action": {
+    "action_type": "open_app",
+    "app_name": "Simple Calendar Pro"
+   },
+   "target": null,
+   "source_step": 0
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 1
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 2
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 3
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 4
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 2
+   },
+   "target": {
+    "resource_name": "com.simplemobiletools.calendar.pro:id/change_view",
+    "content_description": "Change view",
+    "text": null,
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 5
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 5
+   },
+   "target": {
+    "resource_name": null,
+    "content_description": null,
+    "text": "Simple event list",
+    "class_name": "android.widget.RadioButton",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 6
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 21
+   },
+   "target": {
+    "resource_name": "com.simplemobiletools.calendar.pro:id/event_item_title",
+    "content_description": null,
+    "text": "Workshop on Project X",
+    "class_name": "android.widget.TextView",
+    "is_clickable": false,
+    "is_editable": false,
+    "slots": [
+     [
+      "text",
+      [
+       [
+        "event_title",
+        "Workshop on Project X"
+       ]
+      ]
+     ]
+    ],
+    "slots_confirmed": false
+   },
+   "source_step": 7
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 3
+   },
+   "target": {
+    "resource_name": "com.simplemobiletools.calendar.pro:id/delete",
+    "content_description": "Delete",
+    "text": null,
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 8
+  },
+  {
+   "action": {
+    "action_type": "click",
+    "index": 2
+   },
+   "target": {
+    "resource_name": "android:id/button1",
+    "content_description": null,
+    "text": "Yes",
+    "class_name": "android.widget.Button",
+    "is_clickable": true,
+    "is_editable": false,
+    "slots": [],
+    "slots_confirmed": false
+   },
+   "source_step": 9
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 10
+  },
+  {
+   "action": {
+    "action_type": "scroll",
+    "direction": "down"
+   },
+   "target": null,
+   "source_step": 11
+  }
+ ]
+}
