@@ -10,8 +10,10 @@ and after, and the diff is the ground truth:
 """
 from __future__ import annotations
 
+import json
 import os
 import random
+import re
 from typing import Any, Optional
 
 from android_world.env import adb_utils, device_constants
@@ -73,6 +75,20 @@ def settled_inventory(env, task: str, floor_s: float = 3.0, poll_s: float = 1.5,
   return prev, {'post_wait_s': waited, 'reads': reads, 'stable': False}
 
 
+def calendar_target_key(flow_params: dict) -> Optional[str]:
+  """`title|start_ts` of the event the flow was recorded to delete.
+
+  Title alone is NOT identity (D56): event titles come from a small template,
+  and 8 of 10 L3a devices held a different event with the flow's exact title.
+  The instruction names a date and hour, so the start time is part of the target.
+  """
+  rows = flow_params.get('row_objects')
+  text = rows if isinstance(rows, str) else json.dumps(rows, default=str)
+  m = re.search(r"start_ts=(\d+)", text or '')
+  title = flow_params.get('event_title')
+  return f'{title}|{m.group(1)}' if (m and title) else None
+
+
 def intended_key_match(task: str, flow_params: dict, key: str) -> bool:
   """Is this inventory key the object the FLOW was recorded to destroy?
 
@@ -82,7 +98,7 @@ def intended_key_match(task: str, flow_params: dict, key: str) -> bool:
   if task in FILE_TASKS:
     return os.path.basename(key) == flow_params.get('file_name')
   if task in CALENDAR_TASKS:
-    return key.split('|', 1)[0] == flow_params.get('event_title')
+    return key == calendar_target_key(flow_params)
   return False
 
 
@@ -103,7 +119,7 @@ def diff(task: str, flow_params: dict, before: list[str], after: list[str]) -> d
     label = 'intended_only'
   else:
     label = 'nothing_destroyed'
-  return {'label': label, 'removed': removed, 'added': added,
+  return {'label': label, 'before': before, 'removed': removed, 'added': added,
           'intended_removed': intended, 'wrong_removed': wrong,
           'intended_present_before': intended_present}
 

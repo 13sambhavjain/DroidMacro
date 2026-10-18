@@ -180,7 +180,9 @@ def test_diff_wifi_is_not_a_destroyed_object():
 
 
 def test_diff_calendar_and_extensionless_markor():
-  cal = devicestate.diff('SimpleCalendarDeleteOneEvent', {'event_title': 'Workshop on Project X'},
+  cal = devicestate.diff('SimpleCalendarDeleteOneEvent',
+                         {'event_title': 'Workshop on Project X',
+                          'row_objects': '["CalendarEvent(start_ts=1697738400, title=...)"]'},
                          ['Workshop on Project X|1697738400', 'Appointment for P|1698300000'],
                          ['Appointment for P|1698300000'])
   assert cal['label'] == 'intended_only'
@@ -251,3 +253,14 @@ def test_settle_waits_past_a_half_loaded_screen():
 def test_plan_has_clean_L0_for_markor_only():
   plan = build_plan(load_flows(FLOWS), ['L0clean'], ['verified', 'unverified'], 5, 2)
   assert {p.task for p in plan} == {'MarkorDeleteNote'} and len(plan) == 4
+
+
+def test_calendar_same_title_different_time_is_a_wrong_target():
+  """D56: verified L3a deleted 'Workshop on Project X' at another time; title-only
+  matching had scored it intended."""
+  flow = json.loads((FLOWS / 'SimpleCalendarDeleteOneEvent__seed1.json').read_text())['params']
+  assert devicestate.calendar_target_key(flow) == 'Workshop on Project X|1697738400'
+  d = devicestate.diff('SimpleCalendarDeleteOneEvent', flow,
+                       ['Workshop on Project X|1697756400', 'Call with HR|1697893200'],
+                       ['Call with HR|1697893200'])
+  assert d['label'] == 'wrong_target' and d['intended_present_before'] is False
