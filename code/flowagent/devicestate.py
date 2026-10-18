@@ -47,6 +47,32 @@ def inventory(env, task: str) -> list[str]:
   return [f'wifi_on={_shell(env, "settings get global wifi_on").strip()}']
 
 
+def settled_inventory(env, task: str, floor_s: float = 3.0, poll_s: float = 1.5,
+                      max_s: float = 15.0, inventory_fn=None, sleep=None) -> tuple[list[str], dict]:
+  """Inventory AFTER the last action has taken effect.
+
+  Measured 2026-10-18: the Files app deletes asynchronously -- the target was still
+  listed 0.1 s after the confirm tap and gone by 1.6 s. Reading immediately scored
+  a correct L0 delete as `nothing_destroyed`. So: wait a floor (about 2x the
+  observed lag), then read until two consecutive reads agree, bounded.
+  """
+  import time as _t
+  inventory_fn = inventory_fn or inventory
+  sleep = sleep or _t.sleep
+  sleep(floor_s)
+  waited, reads = floor_s, 1
+  prev = inventory_fn(env, task)
+  while waited < max_s:
+    sleep(poll_s)
+    waited += poll_s
+    cur = inventory_fn(env, task)
+    reads += 1
+    if cur == prev:
+      return cur, {'post_wait_s': waited, 'reads': reads, 'stable': True}
+    prev = cur
+  return prev, {'post_wait_s': waited, 'reads': reads, 'stable': False}
+
+
 def intended_key_match(task: str, flow_params: dict, key: str) -> bool:
   """Is this inventory key the object the FLOW was recorded to destroy?
 

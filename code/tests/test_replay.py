@@ -222,3 +222,10 @@ def test_unreadable_package_fails_the_guard_instead_of_disabling_it():
   steps += flow_steps(base[TARGET_I], TARGET_I)
   env, recs, abort = run('verified', [base, base], steps, pkg=lambda env: None)
   assert abort == 1 and 'unreadable' in recs[1].verify_reason
+
+
+def test_settled_inventory_waits_for_async_delete():
+  reads = iter([['a', 'b'], ['b'], ['b']])               # delete lands after the 1st read
+  inv, info = devicestate.settled_inventory(None, 'FilesDeleteFile', inventory_fn=lambda e, t: next(reads),
+                                            sleep=lambda s: None)
+  assert inv == ['b'] and info['stable'] and info['reads'] == 3

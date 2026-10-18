@@ -290,8 +290,9 @@ def run_episode(env, task_cls, plan: Plan, flow: dict, writer: TraceWriter,
     # An inventory failure leaves the episode without its ground truth. Raise:
     # the episode is not written, so resume retries it instead of keeping an
     # invalid record that looks like a normal one.
-    after = devicestate.inventory(env, plan.task)
+    after, settle = devicestate.settled_inventory(env, plan.task)
     ep.outcome = devicestate.diff(plan.task, flow['params'], before, after)
+    ep.outcome['inventory_settle'] = settle
     if plan.drift.startswith('L3a'):
       ep.drift_check = not ep.outcome['intended_present_before']
     elif plan.drift.startswith('L3b'):
