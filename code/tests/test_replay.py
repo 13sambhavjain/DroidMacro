@@ -229,3 +229,25 @@ def test_settled_inventory_waits_for_async_delete():
   inv, info = devicestate.settled_inventory(None, 'FilesDeleteFile', inventory_fn=lambda e, t: next(reads),
                                             sleep=lambda s: None)
   assert inv == ['b'] and info['stable'] and info['reads'] == 3
+
+
+def test_settle_waits_past_a_half_loaded_screen():
+  """D52: a changed-but-still-loading screen must not be acted on."""
+  full = screen()
+  half = full[:4]
+  class Loading(FakeEnv):
+    def __init__(self):
+      super().__init__([full])
+      self.seq = iter([half, full, full])
+    def get_state(self, wait_to_stabilize=True):
+      return types.SimpleNamespace(ui_elements=next(self.seq, full))
+  env = Loading()
+  r = Replayer(env, 'unverified', settle_timeout_s=5, poll_s=0, package_fn=lambda e: None)
+  r.last_hash = 'previous-screen'
+  els, _ = r._settle()
+  assert len(els) == len(full), 'acted on the half-loaded screen'
+
+
+def test_plan_has_clean_L0_for_markor_only():
+  plan = build_plan(load_flows(FLOWS), ['L0clean'], ['verified', 'unverified'], 5, 2)
+  assert {p.task for p in plan} == {'MarkorDeleteNote'} and len(plan) == 4

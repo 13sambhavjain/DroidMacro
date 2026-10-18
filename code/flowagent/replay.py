@@ -50,6 +50,9 @@ SYSTEMUI = 'com.android.systemui'
 GUARD_UNAVAILABLE = '<foreground package unreadable>'
 
 ARMS = ('verified', 'unverified')
+# L0clean (D53): files the app creates on its own that were absent at recording
+# time. Removed after setup so L0 is a real control; the natural L0 is kept too.
+CLEAN_L0 = {'MarkorDeleteNote': ['/storage/emulated/0/Documents/Markor/.app']}
 DESTRUCTIVE_TASKS = devicestate.FILE_TASKS | devicestate.CALENDAR_TASKS
 
 
@@ -105,13 +108,24 @@ class Replayer:
     return self.env.get_state(wait_to_stabilize=True).ui_elements
 
   def _settle(self) -> tuple[list, float]:
-    """Wait (bounded) for the screen to change after the previous action."""
+    """Wait (bounded) until the screen has changed AND then held still for a poll.
+
+    "Changed" alone can be a half-loaded screen (Calendar s2 L0: 4 elements on
+    screen, recorded index 16). Readiness uses no predicate, so it is identical
+    for both arms (D52); before it, the blind arm tapped sooner than the checked
+    one and some of its failures would have been impatience, not drift.
+    """
     t0 = time.perf_counter()
+    changed = self.last_hash is None
+    prev: Optional[str] = None
     while True:
       els = self._observe()
       h = content_hash(els)
-      if self.last_hash is None or h != self.last_hash:
+      if not changed and h != self.last_hash:
+        changed = True
+      elif changed and h == prev:
         break
+      prev = h
       if time.perf_counter() - t0 >= self.settle_timeout_s:
         break
       time.sleep(self.poll_s)
@@ -241,6 +255,8 @@ def build_plan(flows: dict, drifts: list[str], arms: list[str], n_targets: int,
     for arm in arms:
       if 'L0' in drifts:
         plans.append(Plan(task, s, s, arm, 'L0'))
+      if 'L0clean' in drifts and task in CLEAN_L0:
+        plans.append(Plan(task, s, s, arm, 'L0clean'))
       if 'L3a' in drifts and task in DESTRUCTIVE_TASKS:
         for t in [t for t in range(1, 100) if t != s][:n_targets]:
           plans.append(Plan(task, s, t, arm, f'L3a:src{s}'))
@@ -265,6 +281,12 @@ def run_episode(env, task_cls, plan: Plan, flow: dict, writer: TraceWriter,
   env.reset(go_home=True)
   task.initialize_task(env)
   ep.goal = flow['goal']                           # the REPLAYED instruction
+
+  pre_cleanup = []
+  if plan.drift == 'L0clean':
+    for path in CLEAN_L0[plan.task]:
+      devicestate._shell(env, f'rm -rf {path}')
+      pre_cleanup.append(path)
 
   if plan.drift.startswith('L3b'):
     ep.decoys = devicestate.insert_decoys(env, plan.task, params,
@@ -293,6 +315,8 @@ def run_episode(env, task_cls, plan: Plan, flow: dict, writer: TraceWriter,
     after, settle = devicestate.settled_inventory(env, plan.task)
     ep.outcome = devicestate.diff(plan.task, flow['params'], before, after)
     ep.outcome['inventory_settle'] = settle
+    if pre_cleanup:
+      ep.outcome['pre_cleanup'] = pre_cleanup
     if plan.drift.startswith('L3a'):
       ep.drift_check = not ep.outcome['intended_present_before']
     elif plan.drift.startswith('L3b'):
@@ -347,7 +371,7 @@ def target_displaced(steps: list[dict], flow_params: dict) -> Optional[bool]:
 
 def main() -> None:
   ap = argparse.ArgumentParser()
-  ap.add_argument('--drift', default='L0', help='comma list of L0,L3a,L3b')
+  ap.add_argument('--drift', default='L0', help='comma list of L0,L0clean,L3a,L3b')
   ap.add_argument('--arms', default='verified,unverified')
   ap.add_argument('--tasks', default=None)
   ap.add_argument('--n_targets', type=int, default=5, help='L3a device seeds per flow (D45)')
