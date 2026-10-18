@@ -283,8 +283,9 @@ def run_episode(env, task_cls, plan: Plan, flow: dict, writer: TraceWriter,
   ep.goal = flow['goal']                           # the REPLAYED instruction
 
   pre_cleanup = []
-  if plan.drift == 'L0clean':
-    for path in CLEAN_L0[plan.task]:
+  # Also at L3 (D55): the controlled drift must be the ONLY drift.
+  if plan.drift == 'L0clean' or plan.drift.startswith('L3'):
+    for path in CLEAN_L0.get(plan.task, []):
       devicestate._shell(env, f'rm -rf {path}')
       pre_cleanup.append(path)
 
