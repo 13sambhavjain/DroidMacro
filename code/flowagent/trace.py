@@ -34,6 +34,11 @@ class StepRecord:
   tree_chars: int = 0
   raw_response: str = ''
   error: Optional[str] = None
+  # replay only
+  recorded_index: Optional[int] = None   # index the flow recorded; unverified acts on it
+  acted_on: Optional[dict] = None        # fingerprint of the element actually acted on
+  irreversible: bool = False             # trim.label_irreversible: this step commits
+  shadow: Optional[dict] = None          # predicates evaluated but NOT acted on (D47)
 
 
 @dataclasses.dataclass
@@ -56,6 +61,16 @@ class EpisodeRecord:
   # observed start state actually differs from the recording's.
   start_tree_hash: Optional[str] = None
   recorded_start_tree_hash: Optional[str] = None
+  # replay only
+  flow_seed: Optional[int] = None        # seed the flow was RECORDED on; `seed` is the device's
+  trim: dict = dataclasses.field(default_factory=dict)
+  decoys: list = dataclasses.field(default_factory=list)
+  abort_step: Optional[int] = None
+  outcome: dict = dataclasses.field(default_factory=dict)   # devicestate.diff
+  # tree hashes include the status-bar clock, so `drift_confirmed` is true for
+  # any two observations a minute apart (D48). Replay confirms drift from the
+  # inventory instead: L3a = intended target absent, L3b = target + decoys present.
+  drift_check: Optional[bool] = None
 
   @property
   def drift_confirmed(self) -> Optional[bool]:
