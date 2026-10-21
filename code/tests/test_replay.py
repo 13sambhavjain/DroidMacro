@@ -264,3 +264,17 @@ def test_calendar_same_title_different_time_is_a_wrong_target():
                        ['Workshop on Project X|1697756400', 'Call with HR|1697893200'],
                        ['Call with HR|1697893200'])
   assert d['label'] == 'wrong_target' and d['intended_present_before'] is False
+
+
+def test_analyze_headline_pins_the_recorded_results():
+  """Guards the numbers the report quotes: if a code change moves them, this fails."""
+  from flowagent.analyze import headline, load_replay
+  h = headline(load_replay(HERE.parent / 'runs'))
+  if not h:
+    import pytest; pytest.skip('no replay results on disk')
+  assert h[('L3a', 'unverified')]['wrong_target'] == 17
+  assert h[('L3a', 'verified')]['wrong_target'] == 3
+  assert h[('L3b', 'unverified')]['wrong_target'] == 4
+  assert h[('L3b', 'verified')]['wrong_target'] == 0
+  assert h[('L0', 'unverified')]['wrong_target'] == 1
+  assert h[('L0', 'verified')]['wrong_target'] == 0
