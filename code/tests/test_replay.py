@@ -278,3 +278,15 @@ def test_analyze_headline_pins_the_recorded_results():
   assert h[('L3b', 'verified')]['wrong_target'] == 0
   assert h[('L0', 'unverified')]['wrong_target'] == 1
   assert h[('L0', 'verified')]['wrong_target'] == 0
+
+
+def test_analyze_derived_figures_pin_the_report():
+  """The report quotes these too, so a code change that moves them must fail here."""
+  from flowagent.analyze import _load, baseline_by_tier, check_cost, load_replay, shadow_agreement
+  runs = HERE.parent / 'runs'
+  replay, baseline = load_replay(runs), _load(runs / 'baseline.jsonl')
+  if not replay:
+    import pytest; pytest.skip('no replay results on disk')
+  assert baseline_by_tier(baseline) == [['irreversible', 13, 6], ['reversible', 8, 1], ['readonly', 7, 0]]
+  assert sorted(r[2] for r in check_cost(replay)) == [-0.1, 0.13, 0.71, 1.08, 1.77]
+  assert shadow_agreement(replay) == (126, 126)

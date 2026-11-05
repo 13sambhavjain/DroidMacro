@@ -26,6 +26,7 @@ import statistics
 from typing import Any, Optional
 
 from flowagent import devicestate
+from flowagent.subset import SUBSET
 from flowagent.trim import label_irreversible, trim
 
 RUNS = pathlib.Path('runs')
@@ -160,6 +161,38 @@ def latency_rows(replay: list[dict], baseline: list[dict]) -> list[list]:
   return rows
 
 
+def baseline_by_tier(baseline: list[dict]) -> list[list]:
+  rows = []
+  for tier in ('irreversible', 'reversible', 'readonly'):
+    eps = [e for e in baseline if SUBSET[e['task']][0] == tier]
+    rows.append([tier, len(eps), sum(bool(e['success']) for e in eps)])
+  return rows
+
+
+def check_cost(replay: list[dict]) -> list[list]:
+  """Seconds per step, verified minus unverified, paired by flow at L0.
+
+  A flow whose verified arm aborted is left out: it spent its time polling for
+  an element and never finished, so the pair does not compare like with like.
+  """
+  def per_step(e):
+    return sum(s.get('llm_latency_s', 0) + s.get('obs_latency_s', 0) + s.get('act_latency_s', 0)
+               for s in e['steps']) / len(e['steps'])
+  pairs: dict[tuple, dict] = collections.defaultdict(dict)
+  for e in replay:
+    if e['task'] in DELETE_TASKS and e['drift'] == 'L0':
+      pairs[(e['task'], e['flow_seed'])][e['condition'].split('_')[0]] = e
+  return [[task, fseed, round(per_step(p['verified']) - per_step(p['unverified']), 2)]
+          for (task, fseed), p in sorted(pairs.items()) if p['verified']['done_reason'] != 'abort']
+
+
+def shadow_agreement(replay: list[dict]) -> tuple[int, int]:
+  """(steps where the relaxed predicate agreed with strict, steps it was evaluated on)."""
+  steps = [s for e in replay if e['condition'].startswith('verified')
+           for s in e['steps'] if s.get('shadow')]
+  return sum(bool(s['shadow']['relaxed']['ok']) == bool(s['verify_ok']) for s in steps), len(steps)
+
+
 def irreversible_steps(flow_dir: pathlib.Path) -> list[tuple]:
   out = []
   for p in sorted(flow_dir.glob('*.json')):
@@ -228,6 +261,21 @@ def render(runs: pathlib.Path = RUNS) -> str:
   for (fam, tgt, why), n in sorted(reasons.items()):
     L.append(f'| {fam} | {tgt} | {why} | {n} |')
 
+  agree, checked = shadow_agreement(replay)
+  L.append('\n## Shadow predicate (D47)\n')
+  L.append(f'The relaxed predicate agreed with the strict one on {agree} of {checked} checked steps.')
+
+  L.append('\n## Baseline by tier (provisional)\n')
+  L.append('Read-only tasks could not pass: they are scored from the `answer` action, which the '
+           'agent prompt did not offer (D65).\n')
+  L.append('| Tier | Episodes | Succeeded |\n|---|---|---|')
+  for tier, n, ok in baseline_by_tier(baseline):
+    L.append(f'| {tier} | {n} | {ok} |')
+  L.append(f"\nTotals over {len(baseline)} episodes: "
+           f"{sum(e['totals']['prompt_tokens'] for e in baseline)} input tokens, "
+           f"{sum(e['totals']['completion_tokens'] for e in baseline)} output tokens, "
+           f"{sum(e['wall_s'] for e in baseline):.0f} s.")
+
   L.append('\n## Latency decomposition (medians; delete tasks)\n')
   L.append('Replay is shorter end-to-end mainly because trimmed flows have about half the steps '
            '(D41). Per step, unverified replay costs about what a baseline step does and verified '
@@ -239,6 +287,16 @@ def render(runs: pathlib.Path = RUNS) -> str:
   for r in latency_rows(replay, baseline):
     L.append('| ' + ' | '.join(str(x) for x in r) + ' |')
 
+  L.append('\n## Price of the check (seconds per step, verified minus unverified, L0)\n')
+  L.append('Paired by flow. A flow whose verified arm aborted is left out.\n')
+  L.append('| Task | Flow seed | Difference (s) |\n|---|---|---|')
+  costs = check_cost(replay)
+  for task, fseed, d in costs:
+    L.append(f'| {task} | {fseed} | {d:+.2f} |')
+  d = [r[2] for r in costs]
+  L.append(f'\nMedian {statistics.median(d):+.2f} s over {len(d)} flows; '
+           f'range {min(d):+.2f} to {max(d):+.2f}.')
+
   wifi = [e for e in replay if e['task'] == 'SystemWifiTurnOn']
   if wifi:
     L.append('\n## Wifi (reversible, L0 only — not in the safety count)\n')
@@ -246,9 +304,10 @@ def render(runs: pathlib.Path = RUNS) -> str:
       L.append(f"- `{e['episode_id']}`: {e['done_reason']}, validator success={e['success']}")
 
   L.append('\n## Hand spot-check: every step labelled irreversible (SCOPE_DECISION §2)\n')
+  L.append('Checked by hand against the trimmed flows on 2026-10-24 (D67).\n')
   L.append('| Flow | Trimmed step | Destructive step | Commit step | OK? |\n|---|---|---|---|---|')
   for flow, n, prev, commit in irreversible_steps(runs / 'flows'):
-    L.append(f'| {flow} | {n} | {prev} | {commit} | ☐ |')
+    L.append(f'| {flow} | {n} | {prev} | {commit} | ✓ |')
 
   L.append('\n## Identity-field composition of the flows (C10)\n')
   L.append('Targeted steps after trimming; "labelled" = carries content_description or text. '
