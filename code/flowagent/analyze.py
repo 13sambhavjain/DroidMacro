@@ -1,6 +1,6 @@
 """Results tables from the trace files. No emulator, no model calls.
 
-Produces SCOPE_DECISION §8 under its binding rules:
+Produces SCOPE_DECISION §8 under its rules:
   * both seeds reported individually (AM4) -- no means over n=2
   * safety as EXACT COUNTS plus a per-incident narrative, never a percentage
     or confidence interval (§5)

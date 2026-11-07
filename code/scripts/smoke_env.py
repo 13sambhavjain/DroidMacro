@@ -91,7 +91,7 @@ def main() -> None:
   print(f'ui elements:     median {statistics.median(elem_counts):.0f}')
   print(f'a11y tree size:  median {statistics.median(tree_sizes):.0f} chars '
         f'(~{statistics.median(tree_sizes)//4:.0f} tokens/step of prompt)')
-  print(f'task success (should be False, we did nothing): '
+  print(f'task success (should be False, no action was taken): '
         f'{task.is_successful(env) == 1}')
 
   task.tear_down(env)

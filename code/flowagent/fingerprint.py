@@ -1,6 +1,6 @@
 """Element fingerprints and the verification predicate (SCOPE_DECISION.md §2).
 
-THIS FILE IS THE EXPERIMENT. The predicate must stay FIXED across all three
+The predicate must stay FIXED across all three
 conditions -- baseline, verified-replay, unverified-replay -- or the comparison is
 meaningless. Change it only with a logged decision.
 
@@ -15,7 +15,7 @@ Measured facts that forced the design (2026-08-22, 111 elements / 5 screens):
     "copy_fancy_nurse_..." at once.
 
 => Matching is EXACT, never fuzzy: a substring match would select a distractor and
-   delete the wrong file INSIDE the condition we claim is safe, manufacturing the
+   delete the wrong file INSIDE the condition claimed to be safe, manufacturing the
    very behaviour the experiment is supposed to measure.
 => Ambiguity (>1 candidate) is a FAIL, not a tiebreak. Guessing is the behaviour
    under study.

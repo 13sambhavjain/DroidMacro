@@ -9,7 +9,7 @@ the 7 flows (2026-10-12):
   * FilesDeleteFile s2 opens and backs out of the app twice before starting.
 
 Framing B has a human approve the step list, and that human would delete these.
-We cannot ask one, so a FIXED rule stands in for them. It is applied before any
+No such person is available, so a FIXED rule stands in for them. It is applied before any
 replay, identically to both arms, and disclosed. It must not be tuned per flow:
 a rule edited after looking at replay results would be fitting the experiment.
 

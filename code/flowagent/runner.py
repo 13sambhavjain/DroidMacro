@@ -1,7 +1,7 @@
 """Episode runner: baseline pass over the subset, recording candidate flows.
 
-Resumable by construction. Groq's free tier WILL interrupt a full pass
-(SCOPE_DECISION §6), so a killed run must resume at the next episode rather than
+Resumable by construction. Groq's free tier WILL interrupt a full pass,
+so a killed run must resume at the next episode rather than
 redo work or corrupt a partial episode.
 
 Seeds are applied to `random` before generate_random_params(), which is what makes

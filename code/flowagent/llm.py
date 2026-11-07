@@ -6,7 +6,7 @@ Two things this adds for the research harness:
   * every call returns exact token counts + latency -- these ARE the results
   * exhausted rate limits raise RateLimited so the runner can checkpoint and stop
     cleanly rather than corrupting a partial episode. Groq's free tier makes this a
-    certainty, not an edge case (SCOPE_DECISION §6).
+    certainty, not an edge case.
 
 The `fake` provider runs the entire harness with zero API calls.
 """

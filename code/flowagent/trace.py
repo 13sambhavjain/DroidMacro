@@ -4,7 +4,7 @@ Every number in the final results table comes out of these JSONL files, so the
 schema is fixed early and written append-only: an episode is appended the moment it
 finishes, which is what makes a run resumable after a rate-limit kill.
 
-Groq's free tier guarantees interruption (SCOPE_DECISION §6), so resume is a
+Groq's free tier guarantees interruption, so resume is a
 requirement, not a nicety.
 """
 from __future__ import annotations
@@ -57,7 +57,7 @@ class EpisodeRecord:
   done_reason: str = ''      # done | step_budget | error | rate_limited
   wall_s: float = 0.0
   started_at: str = ''
-  # L3 guard (SCOPE_DECISION critique): an episode only COUNTS as drifted if the
+  # L3 guard (D14): an episode only COUNTS as drifted if the
   # observed start state actually differs from the recording's.
   start_tree_hash: Optional[str] = None
   recorded_start_tree_hash: Optional[str] = None
