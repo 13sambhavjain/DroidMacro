@@ -1,0 +1,42 @@
+diff --git a/android_world/env/adb_utils.py b/android_world/env/adb_utils.py
+index 4689b45..a3ad5e1 100644
+--- a/android_world/env/adb_utils.py
++++ b/android_world/env/adb_utils.py
+@@ -26,6 +26,14 @@ from android_env.components import errors
+ from android_env.proto import adb_pb2
+ import immutabledict
+ 
++
++# DEVIATION (DroidMacro): app-launch timeout raised from 5s.
++# Measured warm Chrome launch on the 8GB M2 host: ~5.6s, i.e. over upstream's limit.
++# Override with ANDROID_WORLD_LAUNCH_TIMEOUT if running on faster hardware.
++_SLOW_HOST_LAUNCH_TIMEOUT = float(os.environ.get("ANDROID_WORLD_LAUNCH_TIMEOUT", "45"))
++
++
++
+ T = TypeVar('T')
+ 
+ _DEFAULT_TIMEOUT_SECS = 10
+@@ -701,11 +709,11 @@ def launch_app(
+   if activity is None:
+     #  If the app name is not in the mapping, assume it is a package name.
+     response = issue_generic_request(
+-        ['shell', 'monkey', '-p', app_name, '1'], env, timeout_sec=5
++        ['shell', 'monkey', '-p', app_name, '1'], env, timeout_sec=_SLOW_HOST_LAUNCH_TIMEOUT
+     )
+     logging.info('Launching app by package name, response: %r', response)
+     return app_name
+-  start_activity(activity, extra_args=[], env=env, timeout_sec=5)
++  start_activity(activity, extra_args=[], env=env, timeout_sec=_SLOW_HOST_LAUNCH_TIMEOUT)
+   return app_name
+ 
+ 
+@@ -1059,7 +1067,7 @@ def install_apk(
+   """
+   if not os.path.exists(apk_location):
+     raise ValueError('APK does not exist.')
+-  issue_generic_request(['install', apk_location], env, timeout_sec=30.0)
++  issue_generic_request(['install', apk_location], env, timeout_sec=120.0)
+ 
+ 
+ def check_airplane_mode(env: env_interface.AndroidEnvInterface) -> bool:

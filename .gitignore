@@ -1,0 +1,9 @@
+# Secrets: never commit.
+.env
+.env.*
+!.env.example
+*.swp
+.*.swp
+.DS_Store
+# AndroidWorld is cloned next to code/ to reproduce; it is not part of this repo.
+android_world/
