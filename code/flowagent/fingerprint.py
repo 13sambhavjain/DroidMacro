@@ -32,7 +32,7 @@ NO_TARGET_ACTIONS = frozenset({
     'keyboard_enter', 'status', 'answer', 'unknown',
 })
 
-# For input_text the field's CONTENT is what we are changing, so record-time and
+# For input_text the field's CONTENT is what the action changes, so record-time and
 # replay-time text legitimately differ. Drop `text` from the predicate there.
 TEXT_EXEMPT_ACTIONS = frozenset({'input_text'})
 

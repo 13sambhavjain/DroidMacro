@@ -1,6 +1,6 @@
 """Replay a recorded flow with no model calls: the verified and unverified arms.
 
-Plan of record (D29/D30, D40-D48):
+Design (D29/D30, D40-D48):
   * verified   -- before each targeted step, the app must be the one the flow
                   opened (package guard, D40) and fingerprint.verify() must
                   resolve EXACTLY ONE element; the action is executed on that
@@ -171,7 +171,7 @@ class Replayer:
           ok, reason, r = self._check(fp, els, atype)
           if ok:
             # execute_action re-reads the tree and resolves the index against
-            # THAT, so only act if a fresh read is still the screen we verified.
+            # THAT, so only act if a fresh read is still the screen that was verified.
             fresh = self._observe()
             if content_hash(fresh) == content_hash(els):
               break
@@ -187,7 +187,7 @@ class Replayer:
         if ok:
           action['index'] = r.index
       elif targeted:
-        els = self._observe()               # as close to execute_action's read as we get
+        els = self._observe()               # as close to execute_action's read as possible
         rec.shadow = {'strict': _vr(verify(fp, els, atype)),
                       'relaxed': _vr(verify_relaxed(fp, els, atype))}
 

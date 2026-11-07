@@ -80,7 +80,7 @@ def main() -> None:
     print(f'[step {i}] observe={dt:5.2f}s  ui_elements={len(elems):3d}  '
           f'serialized={len(serialized):6d} chars (~{len(serialized)//4} tokens)')
 
-    # A deliberately harmless action so we time the act->observe cycle too.
+    # A deliberately harmless action so the act->observe cycle is timed too.
     t0 = time.perf_counter()
     env.execute_action(json_action.JSONAction(action_type='wait'))
     print(f'[step {i}] act(wait)={time.perf_counter()-t0:5.2f}s')

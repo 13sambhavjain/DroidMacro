@@ -95,7 +95,7 @@ def test_parameter_substitution_retargets_the_flow():
 
 
 def test_input_text_ignores_text_field():
-  """Record-time and replay-time text legitimately differ for a field we type into."""
+  """Record-time and replay-time text legitimately differ for a field being typed into."""
   _, els = load()
   base = els[0]
   fp = Fingerprint(resource_name=base.resource_name, class_name=base.class_name,
