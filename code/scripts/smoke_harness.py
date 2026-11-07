@@ -3,17 +3,18 @@
 Exercises: agent loop, target-fingerprint capture, token/latency accounting,
 JSONL checkpointing, resume, and flow recording.
 """
-import json, os, pathlib, shutil, sys
+import json, os, pathlib, shutil, sys, tempfile
 os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from android_world import registry
 from android_world.env import env_launcher
 from flowagent.llm import FakeClient
-from flowagent.runner import ADB, run_episode
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
+from flowagent.runner import run_episode
 from flowagent.trace import TraceWriter, episode_id
 
-OUT = pathlib.Path('/tmp/flowagent_smoke')
+OUT = pathlib.Path(tempfile.gettempdir()) / 'flowagent_smoke'
 shutil.rmtree(OUT, ignore_errors=True)
 writer = TraceWriter(OUT / 'baseline.jsonl')
 flows = OUT / 'flows'
@@ -33,7 +34,8 @@ class Script:
       return f'Reasoning first, then:\n```json\n{json.dumps({"reason":"poke","action":{"action_type":"click","index":idx}})}\n```'
     return json.dumps({'reason': 'stop', 'action': {'action_type': 'status', 'goal_status': 'complete'}})
 
-env = env_launcher.load_and_setup_env(console_port=5554, emulator_setup=False, adb_path=ADB)
+env = env_launcher.load_and_setup_env(console_port=CONSOLE_PORT, emulator_setup=False, adb_path=ADB,
+                                      grpc_port=GRPC_PORT)
 aw = registry.TaskRegistry().get_registry('android_world')
 try:
   for task, app in [('MarkorDeleteNote', 'Markor'), ('ContactsAddContact', 'Contacts')]:

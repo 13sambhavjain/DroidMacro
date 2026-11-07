@@ -35,13 +35,12 @@ from typing import Any, Optional
 os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
 
 from flowagent import devicestate
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
 from flowagent.fingerprint import NO_TARGET_ACTIONS, Fingerprint, verify
 from flowagent.shadow import verify_relaxed
 from flowagent.trace import (EpisodeRecord, StepRecord, TraceWriter, episode_id,
                              tree_hash)
 from flowagent.trim import label_irreversible, trim
-
-ADB = os.path.expanduser('~/Library/Android/sdk/platform-tools/adb')
 
 # Same window the baseline agent waits for a screen to change (agent.py).
 SETTLE_TIMEOUT_S = 6.0
@@ -383,7 +382,7 @@ def main() -> None:
   ap.add_argument('--errors', default='runs/replay_errors.jsonl')
   ap.add_argument('--max_attempts', type=int, default=2,
                   help='skip an episode after this many non-environment crashes')
-  ap.add_argument('--console_port', type=int, default=5554)
+  ap.add_argument('--console_port', type=int, default=CONSOLE_PORT)
   ap.add_argument('--dry_run', action='store_true', help='print the plan and exit')
   args = ap.parse_args()
 
@@ -414,7 +413,8 @@ def main() -> None:
   from android_world.env import env_launcher
   aw = registry.TaskRegistry().get_registry('android_world')
   env = env_launcher.load_and_setup_env(console_port=args.console_port,
-                                        emulator_setup=False, adb_path=ADB)
+                                        emulator_setup=False, adb_path=ADB,
+                                        grpc_port=GRPC_PORT)
   screens = pathlib.Path(args.screens)
   consecutive_env_errors, env_broken = 0, False
   try:

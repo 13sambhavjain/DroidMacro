@@ -12,7 +12,9 @@ Usage:
 import argparse
 import json
 import os
+import pathlib
 import statistics
+import sys
 import time
 
 os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
@@ -22,6 +24,9 @@ from android_world import registry
 from android_world.env import env_launcher
 from android_world.env import json_action
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
+
 
 def main() -> None:
   ap = argparse.ArgumentParser()
@@ -29,14 +34,14 @@ def main() -> None:
   ap.add_argument('--steps', type=int, default=5)
   ap.add_argument('--open_app', default=None,
                   help='Open this app first, so tree size is measured in-app, not on home.')
-  ap.add_argument('--console_port', type=int, default=5554)
-  ap.add_argument('--adb_path',
-                  default=os.path.expanduser('~/Library/Android/sdk/platform-tools/adb'))
+  ap.add_argument('--console_port', type=int, default=CONSOLE_PORT)
+  ap.add_argument('--adb_path', default=ADB)
   args = ap.parse_args()
 
   t0 = time.perf_counter()
   env = env_launcher.load_and_setup_env(
-      console_port=args.console_port, emulator_setup=False, adb_path=args.adb_path)
+      console_port=args.console_port, emulator_setup=False, adb_path=args.adb_path,
+      grpc_port=GRPC_PORT)
   print(f'[timing] env launch: {time.perf_counter()-t0:.1f}s')
 
   env.reset(go_home=True)

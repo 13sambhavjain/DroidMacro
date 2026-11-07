@@ -3,9 +3,11 @@
 The verification predicate depends entirely on this: an attribute that is usually
 None, or usually duplicated, cannot identify an element at replay time.
 """
-import collections, os, sys, time
+import collections, os, pathlib, sys, time
 os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from android_world.env import env_launcher, json_action
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
 
 ATTRS = ['resource_id', 'resource_name', 'text', 'content_description',
          'class_name', 'hint_text', 'tooltip']
@@ -24,8 +26,7 @@ def survey(elements, label, out):
 
 def main():
   env = env_launcher.load_and_setup_env(
-      console_port=5554, emulator_setup=False,
-      adb_path=os.path.expanduser('~/Library/Android/sdk/platform-tools/adb'))
+      console_port=CONSOLE_PORT, emulator_setup=False, adb_path=ADB, grpc_port=GRPC_PORT)
   env.reset(go_home=True)
   out = []
   survey(env.get_state(wait_to_stabilize=True).ui_elements, 'home', out)

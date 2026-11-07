@@ -9,7 +9,11 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
+# Machine settings: same variables and defaults as flowagent/config.py.
 export ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+AVD="${ANDROID_AVD:-AndroidWorldAvd}"
+GRPC_PORT="${ANDROID_GRPC_PORT:-8554}"
 PY=".venv/bin/python"
 LOG="runs/overnight.log"
 SLEEP_ON_429="${SLEEP_ON_429:-900}"   # 15 min
@@ -30,7 +34,7 @@ restart_emulator() {
 ensure_emulator() {
   if [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then return 0; fi
   say "emulator not up - starting it"
-  "$ANDROID_HOME/emulator/emulator" -avd AndroidWorldAvd -no-snapshot -grpc 8554 \
+  "$ANDROID_HOME/emulator/emulator" -avd "$AVD" -no-snapshot -grpc "$GRPC_PORT" \
       >> runs/emulator.log 2>&1 &
   for _ in $(seq 1 24); do
     sleep 10

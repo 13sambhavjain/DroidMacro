@@ -1,12 +1,14 @@
 """Capture a real a11y screen to a JSON fixture, so predicate tests run offline."""
-import json, os, sys, time
+import json, os, pathlib, sys, time
 os.environ.setdefault('GRPC_VERBOSITY', 'ERROR')
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from android_world.env import env_launcher, json_action
 from android_world import registry
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
 
 task_name, app, out = sys.argv[1], sys.argv[2], sys.argv[3]
-env = env_launcher.load_and_setup_env(console_port=5554, emulator_setup=False,
-    adb_path=os.path.expanduser('~/Library/Android/sdk/platform-tools/adb'))
+env = env_launcher.load_and_setup_env(console_port=CONSOLE_PORT, emulator_setup=False,
+    adb_path=ADB, grpc_port=GRPC_PORT)
 env.reset(go_home=True)
 aw = registry.TaskRegistry().get_registry('android_world')
 T = aw[task_name]; params = T.generate_random_params(); t = T(params); t.initialize_task(env)

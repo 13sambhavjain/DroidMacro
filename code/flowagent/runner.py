@@ -26,11 +26,10 @@ from android_world.env import env_launcher
 
 from flowagent import subset as subset_mod
 from flowagent.agent import BaselineAgent
+from flowagent.config import ADB, CONSOLE_PORT, GRPC_PORT
 from flowagent.fingerprint import Fingerprint
 from flowagent.llm import RateLimited, make_client
 from flowagent.trace import (EpisodeRecord, TraceWriter, episode_id, tree_hash)
-
-ADB = os.path.expanduser('~/Library/Android/sdk/platform-tools/adb')
 
 
 def save_flow(flow_dir: pathlib.Path, task: str, seed: int, ep: EpisodeRecord,
@@ -127,7 +126,7 @@ def main() -> None:
   ap.add_argument('--out', default='runs/baseline.jsonl')
   ap.add_argument('--flows', default='runs/flows')
   ap.add_argument('--max_steps', type=int, default=None)
-  ap.add_argument('--console_port', type=int, default=5554)
+  ap.add_argument('--console_port', type=int, default=CONSOLE_PORT)
   args = ap.parse_args()
 
   names = ([t.strip() for t in args.tasks.split(',')] if args.tasks
@@ -148,7 +147,8 @@ def main() -> None:
     return
 
   env = env_launcher.load_and_setup_env(console_port=args.console_port,
-                                        emulator_setup=False, adb_path=ADB)
+                                        emulator_setup=False, adb_path=ADB,
+                                        grpc_port=GRPC_PORT)
   n_ok = 0
   rate_limited = False
   consecutive_env_errors = 0
